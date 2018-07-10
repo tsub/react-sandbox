@@ -9,6 +9,7 @@ class Todo extends Component {
 
     this.addTask = this.addTask.bind(this);
     this.updateInputText = this.updateInputText.bind(this);
+    this.updateChecked = this.updateChecked.bind(this);
   }
 
   componentDidMount() {
@@ -31,7 +32,10 @@ class Todo extends Component {
 
         <ul>
           {this.state.tasks.map(task => (
-            <li key={task.id}>{task.name}</li>
+            <div key={task.id}>
+              <input type="checkbox" id={task.id} name={task.id} checked={task.checked} onChange={this.updateChecked} />
+              <label htmlFor={task.id}>{task.name}</label>
+            </div>
           ))}
         </ul>
       </div>
@@ -48,7 +52,9 @@ class Todo extends Component {
     const tasks = JSON.parse(localStorage.getItem("todo")).tasks;
     const newTask = new Task(this.state.inputText);
     const updatedTasks = tasks.concat(newTask);
+
     localStorage.setItem("todo", JSON.stringify({ tasks: updatedTasks }));
+
     this.setState({
       tasks: updatedTasks,
       inputText: "",
@@ -57,6 +63,21 @@ class Todo extends Component {
 
   updateInputText(e) {
     this.setState({ inputText: e.target.value });
+  }
+
+  updateChecked(e) {
+    const tasks = JSON.parse(localStorage.getItem("todo")).tasks;
+    const updatedTasks = tasks.map((task) => {
+      if (task.id === e.target.id) {
+        task.checked = e.target.checked;
+      }
+
+      return task;
+    });
+
+    localStorage.setItem("todo", JSON.stringify({ tasks: updatedTasks }));
+
+    this.setState({ tasks: updatedTasks });
   }
 }
 

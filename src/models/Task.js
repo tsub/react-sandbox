@@ -4,6 +4,7 @@ class Task {
   constructor(name) {
     this.id = uuidv4();
     this.name = name;
+    this.checked = false;
   }
 }
 
